@@ -21,11 +21,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
         run: |
-          docker login --username=${{ secrets.DOCKER_USERNAME }}  --password=${{ secrets.DOCKER_PASSWORD }}
-          docker build -t pavan176/java-web-app:v2
-
+          docker build -t pavan176/java-web-app:v2 .
+        
+      - name: Push Docker image
+        run: |
+          docker push pavan176/java-web-app:v2 
 # name: Run Nginx Docker Container
 
 # on:
