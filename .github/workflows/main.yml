@@ -28,6 +28,9 @@ jobs:
       - name: Push Docker image
         run: |
           docker push pavan176/java-web-app:v2 
+      - name: run  Docker image
+        run: |
+          docker run -itd -p 8080:8080 pavan176/java-web-app:v2 
 # name: Run Nginx Docker Container
 
 # on:
