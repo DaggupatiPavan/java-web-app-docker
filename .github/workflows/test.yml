@@ -1,53 +1,11 @@
-name: Infrastructure Pipeline
-
+name: samplePipeline
 on:
   workflow_dispatch:
-    inputs:
-      Action:
-        description: 'apply will create a resource, destroy will delete'
-        required: true
-        default: 'apply'
-        type: choice
-        options:
-          - apply
-          - destroy
-      environment:
-        description: 'Environment for the infrastructure'
-        required: true
-        default: 'stag'
-        type: choice
-        options:
-          - stag
-          - dev
-          - prod
-      business_division:
-        description: 'Business division'
-        required: true
-        default: 'PlatformEngineering'
-        type: string
-
 jobs:
-  infrastructure:
+  Hello:
     runs-on: self-hosted
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Clone repository
-        run: |
-          rm -rf * .git
-          git clone -b Sprint-1 http://10.63.32.87/platformengineering/devops
-          cd devops
-
-      - name: Infrastructure Creation
-        if: ${{ github.event.inputs.Action == 'apply' }}
-        run: |
-          cd vpc
-          terraform init -backend=true
-          terraform apply -no-color -var "environment=${{ github.event.inputs.environment }}" -var "business_division=${{ github.event.inputs.business_division }}" --auto-approve
-
-      - name: Infrastructure Destruction
-        if: ${{ github.event.inputs.Action == 'destroy' }}
-        run: |
-          cd vpc
-          terraform destroy -no-color --auto-approve
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: echo message
+      run: echo Hello World
