@@ -21,6 +21,10 @@ jobs:
     steps:
     - name: echo message
       run: echo Building the application...
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+      with:
+        repository: DaggupatiPavan/java-web-app-docker
     - name: sh
       shell: bash
       run: mvn clean package
