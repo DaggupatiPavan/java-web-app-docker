@@ -1,4 +1,4 @@
-name: samplePipeline
+name: NewPipeline
 on:
   workflow_dispatch:
 jobs:
