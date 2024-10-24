@@ -36,16 +36,16 @@ jobs:
     - name: checkout
       uses: actions/checkout@v4.1.0
     # 'script' was not transformed because there is no suitable equivalent in GitHub Actions
-    - name: script
-      arguments:
-      - key: scriptBlock
-        value:
-          isLiteral: true
-          value: |-
-            for (int i = 0; i < 6; i++) {
-                echo "Running shell command #${i + 1}"
-                sh "ls target/"
-            }
+    # - name: script
+    #   arguments:
+    #   - key: scriptBlock
+    #     value:
+    #       isLiteral: true
+    #       value: |-
+    #         for (int i = 0; i < 6; i++) {
+    #             echo "Running shell command #${i + 1}"
+    #             sh "ls target/"
+    #         }
   Echo_Messages:
     name: Echo Messages
     runs-on: ubuntu-latest
