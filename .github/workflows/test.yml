@@ -1,98 +1,56 @@
-name: NewPipeline
+name: CI
+
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  Git_Commands:
-    name: Git Commands
+  build:
     runs-on: ubuntu-latest
+
     steps:
-    - name: echo message
-      run: echo Executing Git commands...
-    - name: checkout
-      uses: actions/checkout@v4.1.0
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Execute Git commands
+      run: |
+        echo 'Executing Git commands...'
+        git clone https://github.com/DaggupatiPavan/java-web-app-docker.git
+        ls
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
       with:
-        repository: DaggupatiPavan/java-web-app-docker
-    - name: sh
-      shell: bash
-      run: ls
-  Build:
-    runs-on: ubuntu-latest
-    needs: Git_Commands
-    steps:
-    - name: echo message
-      run: echo Building the application...
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-      with:
-        repository: DaggupatiPavan/java-web-app-docker
-    - name: sh
-      shell: bash
-      run: mvn clean package
-  Run_Shell_Commands:
-    name: Run Shell Commands
-    runs-on: ubuntu-latest
-    needs: Build
-    steps:
-    - name: Echo message for loop
-      shell: bash
-      continue-on-error: true
+        java-version: '11'
+
+    - name: Build the application
+      run: |
+        echo 'Building the application...'
+        mvn clean package
+
+    - name: Run shell commands
       run: |
         for i in {1..6}; do
           echo "Running shell command #$i"
+          ls target/
         done
 
+    - name: Echo messages
+      run: |
+        for i in {1..19}; do
+          echo "Echo message #$i"
+        done
 
-  Echo_Messages:
-    name: Echo Messages
-    runs-on: ubuntu-latest
-    needs: Run_Shell_Commands
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-#     # 'script' was not transformed because there is no suitable equivalent in GitHub Actions
-#     - name: script
-#       arguments:
-#       - key: scriptBlock
-#         value:
-#           isLiteral: true
-#           value: |-
-#             for (int i = 0; i < 19; i++) {
-#                                     echo "Echo message #${i + 1}"
-#                                 }
-  Archive_Artifacts:
-    name: Archive Artifacts
-    runs-on: ubuntu-latest
-    needs: Echo_Messages
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v4.1.0
-      if: always()
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v3
       with:
-        path: "**/target/*.war"
-  Clean_Workspace:
-    name: Clean Workspace
-    runs-on: ubuntu-latest
-    needs: Archive_Artifacts
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: clean workspace
-      shell: bash
-      run: rm -rf ${{ github.workspace }}/*
-  Post-Build:
-    if: always()
-    name: Post Build
-    runs-on: ubuntu-latest
-    needs:
-    - Git_Commands
-    - Build
-    - Run_Shell_Commands
-    - Echo_Messages
-    - Archive_Artifacts
-    - Clean_Workspace
-    steps:
-    - name: echo message
-      run: echo Pipeline execution completed.
-      if: always()
+        name: war-files
+        path: '**/target/*.war'
+
+    - name: Clean workspace
+      run: |
+        rm -rf *
