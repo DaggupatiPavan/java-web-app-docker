@@ -35,11 +35,12 @@ jobs:
     steps:
     - name: Echo message for loop
       shell: bash
+      continue-on-error: true
       run: |
         for i in {1..6}; do
           echo "Running shell command #$i"
-          ls target/
         done
+
 
   Echo_Messages:
     name: Echo Messages
