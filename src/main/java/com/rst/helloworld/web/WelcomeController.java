@@ -17,7 +17,20 @@ public class WelcomeController {
 
 	private final Logger logger = LoggerFactory.getLogger(WelcomeController.class);
 	private final HelloWorldService helloWorldService;
+    @RequestMapping(value = "/hello/{name:.+}", method = RequestMethod.GET)
+	public ModelAndView hello(@PathVariable("name") String name) {
 
+		logger.debug("hello() is executed - $name {}", name);
+
+		ModelAndView model = new ModelAndView();
+		model.setViewName("index");
+		
+		model.addObject("title", helloWorldService.getTitle(name));
+		model.addObject("msg", helloWorldService.getDesc());
+		
+		return model;
+
+	}
 	@Autowired
 	public WelcomeController(HelloWorldService helloWorldService) {
 		this.helloWorldService = helloWorldService;
@@ -32,21 +45,6 @@ public class WelcomeController {
 		model.put("msg", helloWorldService.getDesc());
 		
 		return "index";
-	}
-
-	@RequestMapping(value = "/hello/{name:.+}", method = RequestMethod.GET)
-	public ModelAndView hello(@PathVariable("name") String name) {
-
-		logger.debug("hello() is executed - $name {}", name);
-
-		ModelAndView model = new ModelAndView();
-		model.setViewName("index");
-		
-		model.addObject("title", helloWorldService.getTitle(name));
-		model.addObject("msg", helloWorldService.getDesc());
-		
-		return model;
-
 	}
 
 }
